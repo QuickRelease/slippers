@@ -20,10 +20,11 @@ def create_component_tag(template_path):
     def do_component(parser, token):
         tag_name, *remaining_bits = token.split_contents()
 
-        # Block components start with `#`
+        # Block components start with `SLIPPERS_OPEN_TAG_PREFIX`
         # Expect a closing tag
-        if tag_name[0] == "#":
-            nodelist = parser.parse((f"/{tag_name[1:]}",))
+        if matches := re.match(rf"^{settings.SLIPPERS_OPEN_TAG_PREFIX}(.+?)$", tag_name):
+            component_name = matches.group(1)
+            nodelist = parser.parse((f"{settings.SLIPPERS_CLOSE_TAG_PREFIX}{component_name}",))
             parser.delete_first_token()
         else:
             nodelist = NodeList()
@@ -155,9 +156,8 @@ def register_components(
     for tag_name, template_path in components.items():
         # Inline component
         target_register.tag(f"{tag_name}", create_component_tag(template_path))
-
         # Block component
-        target_register.tag(f"#{tag_name}", create_component_tag(template_path))
+        target_register.tag(f"{settings.SLIPPERS_OPEN_TAG_PREFIX}{tag_name}", create_component_tag(template_path))
 
 
 ##
