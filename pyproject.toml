@@ -20,8 +20,6 @@ classifiers = [
 ]
 include = [
     "LICENSE",
-    "slippers/static/slippers/main.js",
-    "slippers/static/slippers/main.css",
 ]
 
 [tool.poetry.dependencies]

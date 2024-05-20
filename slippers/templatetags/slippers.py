@@ -286,12 +286,3 @@ def do_fragment(parser, token):
 
     return FragmentNode(nodelist, target_var)
 
-
-##
-# slippers errors UI
-@register.inclusion_tag("slippers/overlay.html")
-def slippers_overlay():
-    return {
-        "SLIPPERS_RUNTIME_TYPE_CHECKING": settings.SLIPPERS_RUNTIME_TYPE_CHECKING,
-        "SLIPPERS_TYPE_CHECKING_OUTPUT": settings.SLIPPERS_TYPE_CHECKING_OUTPUT,
-    }

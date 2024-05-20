@@ -296,33 +296,6 @@ class PropsTest(TestCase):
             self.assertTrue(mock_render_error_html.called)
 
 
-class ErrorUITest(TestCase):
-    def test_render_error_ui(self):
-        template = """
-            {% slippers_overlay %}
-        """
-
-        with self.subTest("Enabled"), self.settings(
-            SLIPPERS_RUNTIME_TYPE_CHECKING=True
-        ):
-            output = Template(template).render(Context())
-            self.assertIn("slippers_errors_ui_root", output)
-
-        with self.subTest("Disabled"), self.settings(
-            SLIPPERS_RUNTIME_TYPE_CHECKING=False
-        ):
-            output = Template(template).render(Context())
-            self.assertNotIn("slippers_errors_ui_root", output)
-
-    def test_type_checking_output(self):
-        template = """
-            {% slippers_overlay %}
-        """
-        with self.settings(SLIPPERS_RUNTIME_TYPE_CHECKING=True):
-            output = Template(template).render(Context())
-            self.assertIn('["console", "overlay"]', output)
-
-
 @override_settings(SLIPPERS_RUNTIME_TYPE_CHECKING=True)
 class ComponentCodeTest(TestCase):
     @patch("slippers.templatetags.slippers.render_error_html")
