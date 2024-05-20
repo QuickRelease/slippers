@@ -154,8 +154,6 @@ def register_components(
     if target_register is None:
         target_register = register
     for tag_name, template_path in components.items():
-        # Inline component
-        target_register.tag(f"{tag_name}", create_component_tag(template_path))
         # Block component
         target_register.tag(f"{settings.SLIPPERS_OPEN_TAG_PREFIX}{tag_name}", create_component_tag(template_path))
 
