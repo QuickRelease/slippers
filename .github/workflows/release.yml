@@ -20,23 +20,6 @@ jobs:
         run: |
           pip install poetry
 
-      - name: Set up Node.js 18
-        uses: actions/setup-node@v3
-        with:
-          node-version: "18"
-
-      - name: Install Node.js dependencies
-        run: |
-          cd ui
-          npm ci --no-option --no-audit --progress=false
-
-      - name: Build error UI
-        env:
-          GENERATE_SOURCEMAP: "false"
-        run: |
-          cd ui
-          npm run build
-
       - name: Build the distribution
         run: |
           poetry build
