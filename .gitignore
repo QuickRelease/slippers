@@ -139,7 +139,4 @@ cython_debug/
 {"mode":"full","isActive":false}
 
 .python-version
-.vim
-.nvimrc
-Session.vim
-slippers/static
+.idea/*

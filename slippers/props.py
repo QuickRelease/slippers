@@ -3,6 +3,7 @@ from collections.abc import Mapping
 from dataclasses import dataclass
 from typing import Any, Dict, List, Literal, Optional, Union, get_args, get_origin
 
+from django.conf import settings
 from django.utils.html import SafeString
 from django.utils.safestring import mark_safe
 
@@ -138,29 +139,20 @@ def render_error_html(
     # Remove # from tag name
     tag_name = tag_name.lstrip(settings.SLIPPERS_OPEN_TAG_PREFIX)
 
-    # Output the error as JSON
-    data = json.dumps(
-        {
-            "tag_name": tag_name,
-            "template_name": template_name,
-            "lineno": lineno,
-            "errors": [
-                {
-                    "error": error.error,
-                    "name": error.name,
-                    "expected": get_type_name(error.expected),
-                    "actual": get_type_name(error.actual),
-                }
-                for error in errors
-            ],
-        }
+    error_messages = [
+        error_message_templates[error.error].format(
+            name=error.name,
+            component=tag_name,
+            expected=get_type_name(error.expected),
+            actual=get_type_name(error.actual),
+        )
+        for error in errors
+    ]
+
+    error_message = (
+        f"[slippers] Failed prop types: {tag_name} at {template_name}:{lineno}\\n  "
     )
 
-    data_html = f"""
-        <script>
-            window.slippersPropErrors = window.slippersPropErrors || [];
-            window.slippersPropErrors.push({data});
-        </script>
-    """
+    error_message += "\\n  ".join(error_messages)
 
-    return mark_safe(data_html)  # type: ignore
+    return mark_safe(f"""<script>console.error("{error_message}")</script>""")  # type: ignore
