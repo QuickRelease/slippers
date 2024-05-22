@@ -1,3 +1,4 @@
+import json
 import re
 from typing import Any, Dict, Tuple
 from warnings import warn
@@ -74,6 +75,19 @@ def extract_template_parts(code: str) -> Tuple[str, str]:
     return "", code
 
 
+def resolve_value(value, context):
+    """Resolve a value
+
+    If value references context, resolve it
+    If value is a stringified dict or list, convert it to a real dict or list
+    """
+    resolved = value.resolve(context)
+    if isinstance(resolved, str):
+        if (resolved[0] == '{' and resolved[-1] == '}') or (resolved[0] == '[' and resolved[-1] == ']'):
+            return json.loads(resolved)
+    return resolved
+
+
 class ComponentNode(template.Node):
     def __init__(
         self,
@@ -97,7 +111,7 @@ class ComponentNode(template.Node):
         children = self.nodelist.render(context) if self.nodelist else ""
 
         attributes = {
-            key: value.resolve(context) for key, value in self.raw_attributes.items()
+            key: resolve_value(value, context) for key, value in self.raw_attributes.items()
         }
 
         template = context.template.engine.get_template(self.template_path)
