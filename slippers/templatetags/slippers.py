@@ -19,7 +19,6 @@ register = template.Library()
 def create_component_tag(template_path):
     def do_component(parser, token):
         tag_name, *remaining_bits = token.split_contents()
-
         # Block components start with `SLIPPERS_OPEN_TAG_PREFIX`
         # Expect a closing tag
         if matches := re.match(rf"^{settings.SLIPPERS_OPEN_TAG_PREFIX}(.+?)$", tag_name):
@@ -29,10 +28,15 @@ def create_component_tag(template_path):
         else:
             nodelist = NodeList()
 
+        print("tag_name", tag_name)
+        print("remaining_bits", remaining_bits)
+
+        # todo possibly update this to take different kwarg types (ie dict, list)
         # Bits that are not keyword args are interpreted as `True` values
         all_bits = [bit if "=" in bit else f"{bit}=True" for bit in remaining_bits]
 
         raw_attributes = slippers_token_kwargs(all_bits, parser)
+        print("raw_attributes", raw_attributes)
 
         # Allow component fragment to be assigned to a variable
         target_var = None
@@ -286,3 +290,4 @@ def do_fragment(parser, token):
 
     return FragmentNode(nodelist, target_var)
 
+# todo remove SLIPPERS_RUNTIME_TYPE_CHECKING? SLIPPERS_TYPE_CHECKING_OUTPUT?

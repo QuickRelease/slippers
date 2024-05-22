@@ -130,7 +130,8 @@ error_message_templates = {
     "extra": "Extra prop '{name}' of type '{actual}' set on '{component}'.",
 }
 
-
+# todo remove props entirely?
+# todo reverse https://github.com/mixxorz/slippers/pull/29/files
 def render_error_html(
     *, errors: List[PropError], tag_name: str, template_name: str, lineno: int
 ) -> SafeString:
