@@ -3,7 +3,7 @@ from collections.abc import Mapping
 from dataclasses import dataclass
 from typing import Any, Dict, List, Literal, Optional, Union, get_args, get_origin
 
-from django.conf import settings
+from slippers.conf import settings
 from django.utils.html import SafeString
 from django.utils.safestring import mark_safe
 
