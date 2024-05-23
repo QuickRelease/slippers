@@ -84,6 +84,20 @@ Added support for special characters in keyword arguments.
 
 :::
 
+### Additional data types
+
+Lists and dicts can be passed as arguments to a component, by passing them as a string. For example:
+
+```twig
+{% #button classes='["btn","btn-primary"]' %}Hello{% /button %}
+```
+
+```twig
+{% #button options='{"Option A":"Hello","Option B":"World"}' %}Hello{% /button %}
+```
+
+Note the double quotes around the entries - this is required for the argument to be loaded correctly.
+
 ## Assigning output to a variable
 
 Similar to a [`fragment`](/docs/template-tags-filters#fragment) tag, a component's output can be assigned to a variable.
