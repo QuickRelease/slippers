@@ -83,7 +83,7 @@ def resolve_value(value, context):
     """
     resolved = value.resolve(context)
     if isinstance(resolved, str):
-        if (resolved[0] == '{' and resolved[-1] == '}') or (resolved[0] == '[' and resolved[-1] == ']'):
+        if resolved and ((resolved[0] == '{' and resolved[-1] == '}') or (resolved[0] == '[' and resolved[-1] == ']')):
             return json.loads(resolved)
     return resolved
 
