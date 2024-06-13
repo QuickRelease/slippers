@@ -210,6 +210,8 @@ class AttrsNode(template.Node):
 def do_attrs(parser, token):
     tag_name, *attrs = token.split_contents()
 
+    attrs = set(attrs) | set(settings.SLIPPERS_CORE_COMPONENT_ATTRS.split(" "))
+
     # Format all tokens to be attr=attr so we can use token_kwargs() on it
     all_attrs = [attr if "=" in attr else f"{attr}={attr}" for attr in attrs]
     attr_map = slippers_token_kwargs(all_attrs, parser)
