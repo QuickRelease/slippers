@@ -1,5 +1,6 @@
 import json
 import re
+from json import JSONDecodeError
 from typing import Any, Dict, Tuple
 from warnings import warn
 
@@ -9,6 +10,7 @@ from django.template import Context, NodeList
 from django.utils.safestring import mark_safe
 
 from slippers.conf import settings
+from slippers.exceptions import SlippersError
 from slippers.props import Props, check_prop_types, render_error_html
 from slippers.template import slippers_token_kwargs
 
@@ -75,16 +77,20 @@ def extract_template_parts(code: str) -> Tuple[str, str]:
     return "", code
 
 
-def resolve_value(value, context):
+def resolve_value(key, value, context, tag_name):
     """Resolve a value
 
     If value references context, resolve it
     If value is a stringified dict or list, convert it to a real dict or list
     """
     resolved = value.resolve(context)
-    if isinstance(resolved, str):
-        if resolved and ((resolved[0] == '{' and resolved[-1] == '}') or (resolved[0] == '[' and resolved[-1] == ']')):
-            return json.loads(resolved)
+
+    try:
+        if isinstance(resolved, str):
+            if resolved and ((resolved[0] == '{' and resolved[-1] == '}') or (resolved[0] == '[' and resolved[-1] == ']')):
+                return json.loads(resolved)
+    except JSONDecodeError as exception:
+        raise SlippersError(msg=f"Failed to parse JSON", argument=key, component=tag_name) from exception
     return resolved
 
 
@@ -111,7 +117,7 @@ class ComponentNode(template.Node):
         children = self.nodelist.render(context) if self.nodelist else ""
 
         attributes = {
-            key: resolve_value(value, context) for key, value in self.raw_attributes.items()
+            key: resolve_value(key, value, context, self.tag_name) for key, value in self.raw_attributes.items()
         }
 
         template = context.template.engine.get_template(self.template_path)
