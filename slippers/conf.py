@@ -13,12 +13,12 @@ class Settings:
     def SLIPPERS_CORE_COMPONENT_ATTRS(self) -> str:
         """Core component allowed attributes
 
-        By default, return the common HTMX attributes & id
+        By default, return the common HTMX attributes, class & id
         """
         return getattr(
             django_settings,
             "SLIPPERS_CORE_COMPONENT_ATTRS",
-            "id hx-get hx-post hx-on hx-push-url hx-select hx-select-oob hx-swap "
+            "id class hx-get hx-post hx-on hx-push-url hx-select hx-select-oob hx-swap "
             "hx-swap-oob hx-target hx-trigger hx-vals"
         )
 
