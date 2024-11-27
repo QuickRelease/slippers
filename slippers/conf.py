@@ -43,5 +43,10 @@ class Settings:
             ["console", "overlay"],
         )
 
+    @property
+    def SLIPPERS_DISABLE_CHECKS(self) -> bool:
+        """Disable checks for components.yaml"""
+        return getattr(django_settings, "SLIPPERS_DISABLE_CHECKS", True)
+
 
 settings = Settings()

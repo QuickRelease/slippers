@@ -8,6 +8,7 @@ from django.utils.autoreload import autoreload_started, file_changed
 
 import yaml
 
+from slippers.conf import settings
 from slippers.templatetags.slippers import register_components
 
 
@@ -43,6 +44,8 @@ def changed(sender, file_path: PosixPath, **kwargs):
 
 def checks(app_configs, **kwargs):
     """Warn if unable to find components.yaml"""
+    if settings.SLIPPERS_DISABLE_CHECKS:
+        return []
     try:
         get_components_yaml()
     except TemplateDoesNotExist:
