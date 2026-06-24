@@ -143,3 +143,6 @@ cython_debug/
 .nvimrc
 Session.vim
 .idea/*
+
+# Lock file not required for library
+uv.lock
